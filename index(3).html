@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disciples — Motivational Archetypes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0c0a;
+    --parchment: #f5f0e8;
+    --gold: #b8972a;
+    --gold-light: #d4b558;
+    --rust: #8b3a2a;
+    --slate: #3a4a5c;
+    --mist: #e8e2d8;
+    --shadow: rgba(14,12,10,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ─── COVER ─── */
+  #screen-cover {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 2rem;
+    position: relative;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(184,151,42,0.08) 0%, transparent 70%),
+      var(--parchment);
+  }
+
+  .cover-ornament {
+    font-size: 3.5rem;
+    color: var(--gold);
+    letter-spacing: 0.4em;
+    margin-bottom: 2rem;
+    animation: fadeUp 1.2s ease both;
+  }
+
+  .cover-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    line-height: 1;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .cover-sub {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-top: 0.6rem;
+    animation: fadeUp 1s 0.35s ease both;
+  }
+
+  .cover-divider {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 2rem auto;
+    animation: fadeUp 1s 0.5s ease both;
+  }
+
+  .cover-desc {
+    max-width: 520px;
+    font-size: 1.1rem;
+    color: #4a4540;
+    font-style: italic;
+    animation: fadeUp 1s 0.65s ease both;
+  }
+
+  .cover-meta {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #7a7068;
+    letter-spacing: 0.05em;
+    animation: fadeUp 1s 0.8s ease both;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    margin-top: 2.5rem;
+    padding: 1rem 3rem;
+    background: var(--ink);
+    color: var(--parchment);
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: fadeUp 1s 0.95s ease both;
+  }
+
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+    z-index: 0;
+  }
+
+  .btn-primary:hover::after { transform: translateX(0); }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-primary:hover { color: var(--ink); }
+
+  /* ─── INTRO ─── */
+  #screen-intro {
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    background: var(--parchment);
+  }
+
+  .intro-card {
+    max-width: 640px;
+    width: 100%;
+    background: white;
+    border: 1px solid rgba(184,151,42,0.25);
+    padding: 3rem;
+    box-shadow: 0 4px 40px var(--shadow);
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .intro-card h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+
+  .intro-card p {
+    color: #4a4540;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  .form-row {
+    margin-top: 1.5rem;
+  }
+
+  .form-row label {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+
+  .form-row input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--parchment);
+    border: 1px solid rgba(184,151,42,0.3);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-row input:focus {
+    border-color: var(--gold);
+  }
+
+  /* ─── QUIZ ─── */
+  #screen-quiz {
+    padding: 0;
+    background: var(--parchment);
+  }
+
+  .quiz-header {
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 1.2rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .quiz-header-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .quiz-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .quiz-progress-bar {
+    flex: 1;
+    height: 2px;
+    background: rgba(255,255,255,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quiz-progress-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .quiz-progress-text {
+    font-size: 0.75rem;
+    color: rgba(245,240,232,0.6);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .quiz-section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+  }
+
+  .quiz-body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  .section-transition {
+    text-align: center;
+    padding: 3rem 2rem;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .section-name {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-dim {
+    font-style: italic;
+    color: #7a7068;
+    font-size: 1rem;
+  }
+
+  .question-block {
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.5s ease both;
+    opacity: 0;
+  }
+
+  .question-block.visible { animation: fadeUp 0.5s ease forwards; }
+
+  .question-text {
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  .question-num {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+
+  .likert-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .likert-opt {
+    flex: 1;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  .likert-opt input[type="radio"] { display: none; }
+
+  .likert-opt label {
+    display: block;
+    padding: 0.55rem 0.3rem;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    color: #7a7068;
+    border: 1px solid rgba(184,151,42,0.2);
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .likert-opt label:hover {
+    border-color: var(--gold);
+    color: var(--ink);
+    background: rgba(184,151,42,0.06);
+  }
+
+  .likert-opt input:checked + label {
+    background: var(--ink);
+    color: var(--parchment);
+    border-color: var(--ink);
+  }
+
+  .quiz-nav {
+    display: flex;
+    gap: 1rem;
+    margin-top: 3rem;
+    justify-content: flex-end;
+  }
+
+  .btn-ghost {
+    padding: 0.75rem 2rem;
+    background: transparent;
+    border: 1px solid rgba(14,12,10,0.2);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: #7a7068;
+    transition: all 0.2s;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .btn-next {
+    padding: 0.75rem 2.5rem;
+    background: var(--ink);
+    border: none;
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--parchment);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-next::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .btn-next:hover::after { transform: translateX(0); }
+  .btn-next span { position: relative; z-index: 1; }
+  .btn-next:hover { color: var(--ink); }
+
+  .unanswered-warning {
+    color: var(--rust);
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-top: 0.5rem;
+    display: none;
+  }
+
+  /* ─── LOADING ─── */
+  #screen-loading {
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: var(--parchment);
+    text-align: center;
+  }
+
+  .loading-symbol {
+    font-family: 'Cinzel', serif;
+    font-size: 4rem;
+    color: var(--gold);
+    animation: spin 8s linear infinite;
+    display: block;
+    margin-bottom: 2rem;
+  }
+
+  .loading-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+    animation: pulse 2s ease infinite;
+  }
+
+  /* ─── RESULTS ─── */
+  #screen-results {
+    padding: 0;
+    background: var(--parchment);
+  }
+
+  .results-hero {
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 4rem 2rem 5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .results-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(184,151,42,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .results-hero-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .results-archetype-name {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .results-archetype-latin {
+    font-style: italic;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: rgba(245,240,232,0.5);
+    margin-top: 0.3rem;
+    letter-spacing: 0.1em;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+
+  .results-motivation-badge {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: 0.4rem 1.2rem;
+    border: 1px solid var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .results-body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  .result-card {
+    background: white;
+    border: 1px solid rgba(184,151,42,0.2);
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 20px var(--shadow);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .result-card h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .result-card p {
+    font-size: 1rem;
+    color: #3a3530;
+    line-height: 1.8;
+  }
+
+  .top3-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .top3-grid { grid-template-columns: 1fr; }
+  }
+
+  .top3-card {
+    background: white;
+    border: 1px solid rgba(184,151,42,0.2);
+    padding: 1.5rem 1.2rem;
+    text-align: center;
+    box-shadow: 0 2px 12px var(--shadow);
+    animation: fadeUp 0.6s ease both;
+    position: relative;
+  }
+
+  .top3-card.primary {
+    border-color: var(--gold);
+    background: var(--ink);
+    color: var(--parchment);
+  }
+
+  .top3-rank {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+
+  .top3-card.primary .top3-rank { color: var(--gold-light); }
+
+  .top3-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .top3-sub {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #7a7068;
+    margin-top: 0.2rem;
+  }
+
+  .top3-card.primary .top3-sub { color: rgba(245,240,232,0.5); }
+
+  .top3-score {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-top: 0.5rem;
+  }
+
+  /* Motivation bars */
+  .mot-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .mot-bar-label {
+    width: 160px;
+    font-size: 0.82rem;
+    color: #4a4540;
+    flex-shrink: 0;
+  }
+
+  .mot-bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--mist);
+    overflow: hidden;
+  }
+
+  .mot-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transition: width 1s ease;
+    width: 0%;
+  }
+
+  .mot-bar-val {
+    font-size: 0.75rem;
+    color: #7a7068;
+    width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .confidence-row {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .confidence-item {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .confidence-item .c-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+
+  .confidence-item .c-value {
+    font-size: 1.8rem;
+    font-family: 'Cinzel', serif;
+  }
+
+  .confidence-item .c-sub {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #7a7068;
+  }
+
+  .aka-list {
+    font-style: italic;
+    color: #7a7068;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .btn-restart {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 1rem 3rem;
+    background: transparent;
+    border: 1px solid var(--ink);
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--ink);
+    transition: all 0.3s;
+  }
+
+  .btn-restart:hover {
+    background: var(--ink);
+    color: var(--parchment);
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .archetype-symbol {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  hr.section-rule {
+    border: none;
+    border-top: 1px solid rgba(184,151,42,0.2);
+    margin: 2rem 0;
+  }
+
+  .print-note {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #9a9088;
+    font-style: italic;
+    margin-top: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ COVER ══════════════════════════ -->
+<div id="screen-cover" class="screen active">
+  <div class="cover-ornament">✦ ✦ ✦</div>
+  <h1 class="cover-title">DISCIPLES</h1>
+  <div class="cover-sub">Motivational Archetypes</div>
+  <div class="cover-divider"></div>
+  <p class="cover-desc">
+    A twelve-archetype system mapping your motivational core — the drives, fears, and patterns that shape how you move through the world.
+  </p>
+  <p class="cover-meta">172 questions · 12 archetypes · ~15 minutes</p>
+  <button class="btn-primary" onclick="showScreen('intro')"><span>Begin</span></button>
+</div>
+
+<!-- ══════════════════════════ INTRO ══════════════════════════ -->
+<div id="screen-intro" class="screen">
+  <div class="intro-card">
+    <h2>Before You Begin</h2>
+    <p>This assessment measures twelve motivational dimensions through honest self-reflection. There are no right or wrong answers — only your truth.</p>
+    <p>Answer instinctively. Your first response is usually the most accurate. All questions use a 7-point scale. Take your time, but don't overthink.</p>
+    <div class="form-row">
+      <label>Your Name (optional)</label>
+      <input type="text" id="input-name" placeholder="Enter your name or leave blank" maxlength="60">
+    </div>
+    <div style="margin-top:2rem; display:flex; gap:1rem; flex-wrap:wrap;">
+      <button class="btn-ghost" onclick="showScreen('cover')">← Back</button>
+      <button class="btn-next" onclick="startQuiz()"><span>Begin Assessment →</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ QUIZ ══════════════════════════ -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-header">
+    <div class="quiz-header-title">Disciples</div>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="quiz-progress-text" id="progress-text">0 / 238</div>
+    </div>
+    <div class="quiz-section-label" id="section-label">—</div>
+  </div>
+  <div class="quiz-body" id="quiz-body"></div>
+</div>
+
+<!-- ══════════════════════════ LOADING ══════════════════════════ -->
+<div id="screen-loading" class="screen">
+  <span class="loading-symbol">☿</span>
+  <div class="loading-text">Calculating your archetype</div>
+</div>
+
+<!-- ══════════════════════════ RESULTS ══════════════════════════ -->
+<div id="screen-results" class="screen">
+  <div class="results-hero" id="results-hero">
+    <div class="results-hero-label">Your Primary Archetype</div>
+    <span class="archetype-symbol" id="res-symbol">◈</span>
+    <div class="results-archetype-name" id="res-name">—</div>
+    <div class="results-archetype-latin" id="res-latin">—</div>
+    <div class="results-motivation-badge" id="res-motivation">—</div>
+  </div>
+  <div class="results-body">
+
+    <div class="top3-grid" id="top3-grid"></div>
+
+    <div class="result-card" id="card-desc">
+      <h3>Your Archetype</h3>
+      <p id="res-description">—</p>
+      <p class="aka-list" id="res-aka">—</p>
+    </div>
+
+    <div class="result-card">
+      <h3>Motivational Landscape</h3>
+      <div id="mot-bars"></div>
+    </div>
+
+    <div class="result-card" id="card-confidence">
+      <h3>Self-Reflection Quality</h3>
+      <div class="confidence-row">
+        <div class="confidence-item">
+          <div class="c-label">Confidence Index</div>
+          <div class="c-value" id="res-confidence">—</div>
+          <div class="c-sub" id="res-confidence-level">—</div>
+        </div>
+        <div class="confidence-item">
+          <div class="c-label">Self-Insight</div>
+          <div class="c-value" id="res-si">—</div>
+          <div class="c-sub">Reflective accuracy</div>
+        </div>
+        <div class="confidence-item">
+          <div class="c-label">Self-Serving Bias</div>
+          <div class="c-value" id="res-ssb">—</div>
+          <div class="c-sub">Idealization tendency</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <h3>Secondary & Tertiary Archetypes</h3>
+      <p id="res-blend">—</p>
+    </div>
+
+    <div style="text-align:center;">
+      <button class="btn-restart" onclick="restart()">Take Again</button>
+      <p class="print-note">Use your browser's print function to save these results.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════════════
+
+const DIMS = ['Relational_Balance','Wu_Wei','Anatta','Cheng','Prajna','Sattva','Rajas','Tamas',
+              'Personal_Unconscious','Collective_Unconscious','Eros','Thymos',
+              'Conform','Control','Flow','Risk','Energy','Cognitive','Surrender','Relational',
+              'Self_Serving_Bias','Self_Insight'];
+
+const MOTIVATIONS = ['Sattva','Rajas','Tamas','Prajna','Personal_Unconscious','Collective_Unconscious',
+                     'Cheng','Wu_Wei','Anatta','Relational_Balance','Thymos','Eros'];
+
+const CENTROIDS = {
+  'Lucerna (Lantern)':   {Sattva:4.8,Rajas:6.8,Tamas:3.8,Prajna:6.0,Personal_Unconscious:4.7,Collective_Unconscious:4.5,Cheng:5.0,Wu_Wei:4.9,Anatta:4.3,Relational_Balance:4.7,Thymos:6.2,Eros:5.0},
+  'Arbor (Tree)':        {Sattva:6.4,Rajas:4.5,Tamas:4.7,Prajna:4.4,Personal_Unconscious:4.5,Collective_Unconscious:4.8,Cheng:6.0,Wu_Wei:4.8,Anatta:4.3,Relational_Balance:6.7,Thymos:5.0,Eros:5.3},
+  'Sharin (Wheel)':      {Sattva:5.0,Rajas:6.2,Tamas:4.2,Prajna:4.8,Personal_Unconscious:4.5,Collective_Unconscious:4.7,Cheng:5.4,Wu_Wei:5.8,Anatta:4.5,Relational_Balance:5.3,Thymos:6.5,Eros:5.0},
+  'Keras (Rhino)':       {Sattva:4.8,Rajas:6.2,Tamas:5.7,Prajna:4.8,Personal_Unconscious:4.4,Collective_Unconscious:4.5,Cheng:6.7,Wu_Wei:4.7,Anatta:4.0,Relational_Balance:4.5,Thymos:5.2,Eros:4.4},
+  'Hayabusa (Falcon)':   {Sattva:4.6,Rajas:5.3,Tamas:4.8,Prajna:4.7,Personal_Unconscious:6.7,Collective_Unconscious:4.5,Cheng:6.3,Wu_Wei:4.4,Anatta:4.2,Relational_Balance:4.7,Thymos:5.7,Eros:4.4},
+  'Arachna (Spider)':    {Sattva:4.2,Rajas:4.8,Tamas:6.5,Prajna:4.5,Personal_Unconscious:4.7,Collective_Unconscious:6.3,Cheng:4.3,Wu_Wei:4.8,Anatta:6.4,Relational_Balance:4.2,Thymos:4.8,Eros:4.5},
+  'Tempus (Hourglass)':  {Sattva:6.2,Rajas:5.0,Tamas:4.3,Prajna:6.6,Personal_Unconscious:5.3,Collective_Unconscious:5.0,Cheng:6.1,Wu_Wei:4.8,Anatta:4.5,Relational_Balance:4.9,Thymos:4.8,Eros:4.7},
+  'Simia (Monkey)':      {Sattva:4.8,Rajas:5.8,Tamas:4.2,Prajna:4.6,Personal_Unconscious:4.7,Collective_Unconscious:4.8,Cheng:4.6,Wu_Wei:6.5,Anatta:4.3,Relational_Balance:5.0,Thymos:5.0,Eros:6.2},
+  'Polvo (Octopus)':     {Sattva:4.6,Rajas:4.7,Tamas:5.5,Prajna:6.3,Personal_Unconscious:5.4,Collective_Unconscious:5.1,Cheng:4.8,Wu_Wei:4.5,Anatta:6.4,Relational_Balance:4.4,Thymos:4.6,Eros:4.5},
+  'Tigre (Tiger)':       {Sattva:6.5,Rajas:6.2,Tamas:4.4,Prajna:4.9,Personal_Unconscious:4.7,Collective_Unconscious:5.8,Cheng:4.9,Wu_Wei:5.6,Anatta:4.3,Relational_Balance:4.8,Thymos:4.8,Eros:4.7},
+  'Enguia (Eel)':        {Sattva:6.3,Rajas:4.7,Tamas:4.3,Prajna:4.5,Personal_Unconscious:4.8,Collective_Unconscious:4.9,Cheng:4.8,Wu_Wei:5.0,Anatta:4.4,Relational_Balance:6.5,Thymos:5.2,Eros:6.7},
+  'Dacia (Nomad)':       {Sattva:4.8,Rajas:6.5,Tamas:4.5,Prajna:5.6,Personal_Unconscious:4.8,Collective_Unconscious:6.7,Cheng:4.7,Wu_Wei:5.1,Anatta:5.2,Relational_Balance:4.6,Thymos:6.1,Eros:5.5},
+};
+
+const ARCHETYPE_INFO = {
+  'Lucerna (Lantern)': {
+    symbol: '🕯️',
+    short: 'Lucerna',
+    latin: 'The Lantern',
+    motivation: 'Rajas / Drive & Vision',
+    aka: 'Utopian · Traditionalist · Mystic · Saint · Romantic · Dreamer',
+    description: 'Lucerna types see life as an unfolding story of meaning and possibility. They are idealistic builders of light, seeking joy and order through faith, imagination, and purposeful creation. Their optimism inspires others, transforming chaos into vision and vision into pursuit.\n\nYet their innocence can border on denial — seeking paradise while avoiding imperfection. When mature, they retain their hope but ground it in realism, becoming luminous examples of perseverance and trust.\n\nThey teach that happiness is not naïve optimism but the courage to imagine better even after disappointment.'
+  },
+  'Arbor (Tree)': {
+    symbol: '🌳',
+    short: 'Arbor',
+    latin: 'The Tree',
+    motivation: 'Relational Balance / Connection & Belonging',
+    aka: 'The good old boy · Regular guy · The realist · The working stiff · The solid citizen',
+    description: 'Arbor embodies empathy, humility, and stability — the instinct to harmonize within a community. They root themselves in reliability and care, seeking closeness without control. Their strength lies in their steadiness; people trust them because they show up.\n\nWhen imbalanced, they over-adapt — losing individuality to preserve peace. Their growth lies in learning that belonging begins with authenticity, not conformity.\n\nThey teach that connection thrives on honesty, not sameness.'
+  },
+  'Sharin (Wheel)': {
+    symbol: '☸️',
+    short: 'Sharin',
+    latin: 'The Wheel',
+    motivation: 'Thymos / Duty & Compassion',
+    aka: 'The saint · Altruist · Parent · Helper · Supporter',
+    description: 'Sharin types are anchored in service, guided by empathy and a strong moral compass. They are drawn to nurture, protect, and stabilize those around them, often becoming the emotional cornerstone of their communities. Their strength lies in consistency — they express care not through words but through loyal presence and tangible effort.\n\nHowever, their compassion can turn into martyrdom, giving beyond their capacity and resenting the imbalance that follows. Growth for Sharin means learning that love is not proven through exhaustion.\n\nTheir virtue is generosity; their shadow, self-neglect. Their path is learning to serve with others, not for them.'
+  },
+  'Keras (Rhino)': {
+    symbol: '🦏',
+    short: 'Keras',
+    latin: 'The Rhino',
+    motivation: 'Cheng / Strength & Integrity',
+    aka: 'The warrior · Crusader · Superhero · The soldier · Dragon slayer · The winner',
+    description: 'Keras represents disciplined power — the instinct to protect, endure, and act decisively. They thrive when confronting challenges that demand courage, precision, and structure. Their presence is grounding; they bring stability to chaos and direction to uncertainty.\n\nAt their best, they transform aggression into protection, embodying leadership through endurance and skill. But when overextended, they become rigid or combative, mistaking vulnerability for weakness.\n\nTheir growth lies in softening without losing strength — discovering that true mastery is not dominance but steadiness under pressure.'
+  },
+  'Hayabusa (Falcon)': {
+    symbol: '🦅',
+    short: 'Hayabusa',
+    latin: 'The Falcon',
+    motivation: 'Personal Unconscious / Order & Will',
+    aka: 'The boss · Leader · Aristocrat · King · Queen · Politician · Manager',
+    description: 'Hayabusa symbolizes discipline, control, and stewardship — the desire to maintain structure in a chaotic world. They are natural leaders, often feeling a moral responsibility to protect and organize others. Their presence commands stability, and their integrity inspires trust.\n\nYet their strength can turn authoritarian; the line between leadership and control grows thin. When humble, they create harmony through vision and delegation.\n\nTheir growth is learning that true power lies not in control, but in enabling others to rise with them.'
+  },
+  'Arachna (Spider)': {
+    symbol: '🕷️',
+    short: 'Arachna',
+    latin: 'The Spider',
+    motivation: 'Tamas / Chaos & Renewal',
+    aka: 'The rebel · Revolutionary · Wild man · The misfit · Iconoclast',
+    description: 'Arachna represents the archetype of necessary destruction — the courage to unravel what is false or oppressive. They challenge systems, test boundaries, and embody radical freedom. Their intensity catalyzes change in those around them, often revealing hidden hypocrisy or fear.\n\nIn their shadow, rebellion becomes addiction to chaos, seeking conflict for its own sake. But in balance, Arachna is reformative: they don\'t just break — they rebuild better.\n\nTheir life path is about transforming rage into renewal and rebellion into reformation.'
+  },
+  'Tempus (Hourglass)': {
+    symbol: '⌛',
+    short: 'Tempus',
+    latin: 'The Hourglass',
+    motivation: 'Prajna-Logos / Wisdom & Synthesis',
+    aka: 'The visionary · Catalyst · Inventor · Charismatic leader · Shaman · Healer',
+    description: 'Tempus lives to understand time — not as a clock, but as pattern and purpose. They are architects of causality, weaving insight across past, present, and potential futures. Their perception allows them to see interconnection where others see coincidence.\n\nHowever, this awareness can lead to manipulation or paralysis if not anchored in empathy. They may try to control outcomes instead of aligning with them.\n\nIn growth, Tempus embodies patience and foresight, using understanding to heal rather than dominate. They hold the wisdom that everything happens twice — first in vision, then in action.'
+  },
+  'Simia (Monkey)': {
+    symbol: '🐒',
+    short: 'Simia',
+    latin: 'The Monkey',
+    motivation: 'Wu Wei / Flow & Play',
+    aka: 'The fool · Trickster · Joker · Practical joker · Comedian',
+    description: 'Simia embodies spontaneity and fluid intelligence, the ability to adapt through movement, humor, and improvisation. They live in the present, finding joy in the absurd and lightness in tension. Their playfulness dissolves rigidity, often helping others see life\'s comedy where they once saw tragedy.\n\nYet when untethered, this energy becomes scattered or performative — they chase stimulation to escape inner boredom. When balanced, Simia expresses effortless mastery: doing without overthinking, laughing without denial.\n\nTheir lesson is that joy is not the absence of meaning but the movement that keeps it alive.'
+  },
+  'Polvo (Octopus)': {
+    symbol: '🐙',
+    short: 'Polvo',
+    latin: 'The Octopus',
+    motivation: 'Anatta / Self-Transcendence',
+    aka: 'The expert · Scholar · Detective · Advisor · Philosopher · Academic · Researcher',
+    description: 'Polvo types seek truth beyond surface appearances, driven by a need to understand the deep structure of reality and the human mind. They process life through inquiry and observation rather than emotion, often appearing detached while their inner world hums with quiet complexity. Their calm masks a constant analysis — mapping patterns, motives, and causes with surgical precision.\n\nHowever, their search for understanding can become an avoidance of participation, observing life rather than living it. In stress, they isolate; in balance, they guide.\n\nTheir challenge is to act before certainty arrives — to trust the imperfect truth of the present moment.'
+  },
+  'Tigre (Tiger)': {
+    symbol: '🐯',
+    short: 'Tigre',
+    latin: 'The Tiger',
+    motivation: 'Sattva / Freedom & Experience',
+    aka: 'The seeker · Iconoclast · Wanderer · Individualist · Pilgrim',
+    description: 'Tigre is driven by curiosity and the hunger to experience life directly. They seek authenticity through movement — new ideas, landscapes, sensations. Their vitality comes from exploration and their wisdom from the lessons gathered along the way.\n\nWhen balanced, they embody self-trust, inspiring others to embrace individuality. But when lost, they drift, mistaking rebellion for freedom.\n\nTheir evolution is from escape to purpose — from running from confinement to walking toward meaning.'
+  },
+  'Enguia (Eel)': {
+    symbol: '🫀',
+    short: 'Enguia',
+    latin: 'The Eel',
+    motivation: 'Eros / Passion & Union',
+    aka: 'The partner · Friend · Intimate · Enthusiast · Sensualist · Team-builder',
+    description: 'Enguia represents desire in its purest form — the urge to merge, to experience intimacy through body, mind, and heart. They crave emotional resonance and beauty, finding purpose through deep connection. Their passion gives life texture and meaning, awakening others to feeling.\n\nBut their longing can blur into dependency or self-abandonment. They risk becoming mirrors for others instead of expressions of themselves.\n\nWhen balanced, they transform love into vitality — a force of gratitude, creativity, and renewal. They remind the world that passion is sacred when rooted in self-awareness.'
+  },
+  'Dacia (Nomad)': {
+    symbol: '🏺',
+    short: 'Dacia',
+    latin: 'The Nomad',
+    motivation: 'Collective Unconscious / Imagination & Legacy',
+    aka: 'The artist · Inventor · Innovator · Musician · Writer · Dreamer',
+    description: 'Dacia channels imagination into tangible form — art, ideas, inventions, or movements that outlast them. They live at the intersection of creativity and order, translating vision into structure. Their imagination serves the collective, not the ego.\n\nWhen overextended, they collapse under perfectionism, chasing ideals that reject imperfection. At their best, they become cultural translators — giving voice to collective longing through beauty and innovation.\n\nTheir work reminds others that creativity is not indulgence but contribution.'
+  },
+};
+
+const DIM_LABELS = {
+  Sattva: 'Sattva', Rajas: 'Rajas', Tamas: 'Tamas',
+  Prajna: 'Prajna-Logos', Personal_Unconscious: 'Personal Unc.', Collective_Unconscious: 'Collective Unc.',
+  Cheng: 'Cheng', Wu_Wei: 'Wu Wei', Anatta: 'Anatta',
+  Relational_Balance: 'Rel. Balance', Thymos: 'Thymos', Eros: 'Eros',
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  QUESTIONS
+// ═══════════════════════════════════════════════════════════════
+
+const SECTIONS = [
+  { dim: 'Relational_Balance', title: 'Relational Balance', display: 'Relational Balance' },
+  { dim: 'Wu_Wei',             title: 'Wu Wei',             display: 'Wu Wei' },
+  { dim: 'Anatta',             title: 'Anatta',             display: 'Anatta' },
+  { dim: 'Cheng',              title: 'Cheng',              display: 'Cheng' },
+  { dim: 'Prajna',             title: 'Prajna-Logos',       display: 'Prajna-Logos' },
+  { dim: 'Sattva',             title: 'Sattva',             display: 'Sattva' },
+  { dim: 'Rajas',              title: 'Rajas',              display: 'Rajas' },
+  { dim: 'Tamas',              title: 'Tamas',              display: 'Tamas' },
+  { dim: 'Personal_Unconscious',    title: 'Personal Unconscious',    display: 'Personal Unconscious' },
+  { dim: 'Collective_Unconscious',  title: 'Collective Unconscious',  display: 'Collective Unconscious' },
+  { dim: 'Eros',               title: 'Eros',               display: 'Eros' },
+  { dim: 'Thymos',             title: 'Thymos',             display: 'Thymos' },
+  { dim: 'Conform',            title: 'Conform',            display: 'Conform — Strategy' },
+  { dim: 'Control',            title: 'Control',            display: 'Control — Strategy' },
+  { dim: 'Flow',               title: 'Flow',               display: 'Flow — Strategy' },
+  { dim: 'Risk',               title: 'Risk',               display: 'Risk — Strategy' },
+  { dim: 'Energy',             title: 'Energy',             display: 'Energy — Orientation' },
+  { dim: 'Cognitive',          title: 'Cognitive',          display: 'Cognitive — Orientation' },
+  { dim: 'Surrender',          title: 'Surrender',          display: 'Surrender — Orientation' },
+  { dim: 'Relational',         title: 'Relational',         display: 'Relational — Orientation' },
+  { dim: 'Self_Serving_Bias',  title: 'Self-Serving Bias',  display: 'Self-Serving Bias' },
+  { dim: 'Self_Insight',       title: 'Self-Insight',       display: 'Self-Insight' },
+];
+
+const RAW_QUESTIONS = {
+  Relational_Balance: [
+    {q: 'I try to maintain fairness and understanding in my relationships.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I sometimes struggle to balance my own needs with others\'.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I prefer calm, steady interactions over emotional highs and lows.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I can get frustrated when others don\'t meet me halfway.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I notice quickly when a relationship starts to feel one-sided.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I\'m sensitive to how my words or actions affect group harmony.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I try to repair tension rather than avoid it.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I occasionally prioritize peace over honesty.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+  ],
+  Wu_Wei: [
+    {q: 'I achieve more when I stop trying to control every outcome.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I often find the right moment to act without forcing it.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I trust that situations tend to unfold in their own way.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I sometimes act too quickly instead of waiting for the right timing.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I feel most effective when I respond naturally to what\'s happening.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I can get restless when things take longer than I expect.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I find that patience often leads to better results than pressure.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I stay calm and adapt easily when plans change unexpectedly.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+  ],
+  Anatta: [
+    {q: 'I often feel like I\'m part of something larger than myself.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'My personal identity changes depending on my experiences.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I try to make decisions without letting ego or pride get in the way.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I sometimes lose motivation when I stop focusing on personal goals.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I find peace in letting go of how others see me.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I occasionally feel detached from my own emotions.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I see myself as just one small part of a wider system of life.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel most at peace when I stop trying to define myself.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+  ],
+  Cheng: [
+    {q: 'I tend to feel most centered when I act according to my real values.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I don\'t try to control how others see me — I focus on being genuine.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I find it easy to make decisions that reflect who I really am.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I sometimes struggle to stay true to myself when others expect more.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I prefer to be straightforward rather than polished or strategic.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel off-balance when I act in ways that don\'t feel authentic.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I can be resistant to feedback when it challenges my sense of self.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I try to live in a way that feels both natural and responsible.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+  ],
+  Prajna: [
+    {q: 'I often pause to reflect on what a situation might be teaching me.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I look for patterns or meanings behind events in my life.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I enjoy thinking through complex problems step by step.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I sometimes overanalyze things instead of trusting my instincts.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I feel most satisfied when I\'ve learned something that changes my perspective.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I tend to question my own assumptions before forming conclusions.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I like organizing ideas or information until they make clear sense.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I find it easier to connect with people who enjoy exploring ideas in depth.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+  ],
+  Sattva: [
+    {q: 'I try to stay calm and centered even when things around me get tense.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel most like myself when my mind is clear and steady.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I sometimes avoid conflict to keep the peace, even when something feels off.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I value a calm atmosphere more than high energy or intensity.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I work best when my environment feels balanced and harmonious.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I try to treat others gently, even when I feel stressed.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I lose focus when life becomes chaotic or emotionally charged.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I believe peace is something you create through awareness, not avoidance.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+  ],
+  Rajas: [
+    {q: 'I feel most motivated when I have something meaningful to work toward.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I get a burst of energy when I set a new goal for myself.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I find it hard to relax when progress feels slow.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I enjoy challenges that push me past what I thought I could do.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I sometimes take on more projects than I can realistically handle.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I feel most alive when my ideas start turning into action.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I lose motivation when things stay the same for too long.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel recharged by activity and movement more than by rest.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+  ],
+  Tamas: [
+    {q: 'I find comfort in familiar routines and habits.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I prefer gradual change over sudden disruption.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel most at ease when life follows a steady rhythm.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I sometimes resist new opportunities because I value stability.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I recharge best when I can slow down and do nothing for a while.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I can become stuck in comfort even when I know I need to move forward.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I believe steadiness is more important than constant activity.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel more grounded when my days are predictable.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+  ],
+  Personal_Unconscious: [
+    {q: 'I often notice a feeling or impression about a situation before I can explain why.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I trust my gut reactions more when they stay consistent over time.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I sometimes act too quickly on instinct before thinking things through.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I feel guided by an inner sense of direction, even when I can\'t fully describe it.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I use both intuition and logic when I make important decisions.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'My first impressions about people or events often turn out to be right.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I notice subtle bodily signals or moods that tell me when something is off.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I\'ve learned that intuition works best when I\'m calm and paying attention.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+  ],
+  Collective_Unconscious: [
+    {q: 'I feel most alive when contributing to something that outlasts me.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I\'m inspired by the idea that my actions connect to a larger story or purpose.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I often notice patterns that seem to repeat across people or cultures.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I sometimes feel detached from collective issues because they seem too big to influence.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I find meaning in creating or supporting things that serve others beyond myself.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel connected to ideas, traditions, or values that have existed for generations.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I sense that creativity often comes from something bigger than personal willpower.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I care about leaving behind something of value for those who come after me.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+  ],
+  Eros: [
+    {q: 'My goal in life is to share a deep emotional connection with someone.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel most alive when I\'m emotionally open with another person.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'I often seek relationships where I can grow through vulnerability.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'I sometimes avoid closeness because it can feel overwhelming.', labels: ['Never','Rarely','Sometimes','About Half the Time','Often','Usually','Always']},
+    {q: 'Deep connection feels more meaningful to me than excitement or novelty.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I\'m drawn to experiences that bring me closer to someone\'s inner world.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+    {q: 'When I care for someone, I want to understand them completely.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I find emotional intimacy energizing, even when it requires hard work.', labels: ['Not at all','Slightly','Somewhat','Moderately','Quite','Very','Extremely']},
+  ],
+  Thymos: [
+    {q: 'I feel most energized when I\'m living in line with my values.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I take pride in standing by my beliefs, even when it\'s unpopular.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel uncomfortable when others question my integrity.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I\'m motivated by the feeling that I\'ve earned genuine respect.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I try to live in a way that reflects the standards I hold myself to.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I sometimes struggle to admit when my values might need updating.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I gain confidence from doing what I believe is right, even if it\'s hard.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel grounded when my actions match my sense of self-respect.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+  ],
+  Conform: [
+    {q: 'I often adjust my actions to meet others\' expectations.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I prefer to fit in rather than stand out.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I find it easier to go along with a group than to push back against it.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I feel uncomfortable breaking rules or going against the norm.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'It\'s important to me to behave appropriately in any social situation.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I care a lot about what others think of me.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I try to read the social atmosphere and adjust so everyone feels comfortable.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+  ],
+  Control: [
+    {q: 'I thrive when my environment is structured and predictable.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I prefer systems that follow clear rules over those guided by emotion.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel uncomfortable when something lacks structure or clarity.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I enjoy bringing order to chaotic situations.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I often think through multiple outcomes before making a choice.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I like to take charge of a situation to ensure everything is done right.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel most confident when I can anticipate and plan for what\'s ahead.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+  ],
+  Flow: [
+    {q: 'I feel most effective when I let things unfold without forcing them.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I often lose myself in a task when I stop trying to control the outcome.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I do my best work when I can adapt to the situation rather than follow a strict plan.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I handle surprises or changes in plans with ease.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I often get so absorbed in an activity that I lose track of time.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I perform well when I can be flexible and spontaneous.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I trust that the right opportunities come when I stay open and attentive.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+  ],
+  Risk: [
+    {q: 'I feel driven to take bold action, even when the outcome is uncertain.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I find growth by pushing through situations that scare me.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I feel most alive when stepping into unfamiliar territory.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I get bored if I go too long without something exciting or challenging to do.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I am willing to risk failure if there\'s a chance to achieve something great.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I have a high tolerance for uncertainty in my life.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'Facing uncertainty helps me discover strengths I didn\'t know I had.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+  ],
+  Energy: [
+    {q: 'I come alive when I\'m in motion or up against a new challenge.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I prefer acting quickly to spending too much time thinking.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I gain energy from tackling tasks directly.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I become restless when life feels repetitive.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I sometimes move too fast and have to backtrack.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I feel motivated when my environment is lively or unpredictable.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I like to experiment and learn through direct experience.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I thrive when I can adapt quickly to changing circumstances.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+  ],
+  Cognitive: [
+    {q: 'Nothing energizes me quite like diving deep into an idea.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I\'m motivated by understanding more than by excitement.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I often pause to analyze a situation before acting.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel more grounded when I can make sense of things logically.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I sometimes overthink things and lose momentum.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I find clarity through reflection, even in uncertain situations.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I enjoy tracing how different events or ideas connect.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I gain confidence when I can put my thoughts into a clear framework.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+  ],
+  Surrender: [
+    {q: 'I feel uneasy when I\'m not directing the outcome of a situation.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I find peace in trusting that things will unfold as they should.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I believe discipline helps me feel free, not constrained.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I struggle to let go of control even when I know it\'s necessary.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel most aligned when effort and surrender work together.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I can accept uncertainty without feeling helpless.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I find that life works best when I stop forcing results.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I can remain steady and present even when I have no control over what happens next.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+  ],
+  Relational: [
+    {q: 'I see relationships as spaces for mutual growth, not competition.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I believe most people are doing their best, even when they fall short.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I value honesty more than harmony in relationships.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I tend to put others\' needs before my own.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I feel a sense of duty to care for others\' well-being.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I find meaning in feeling emotionally connected to others.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I think strong relationships require boundaries as much as love.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel closest to people when we can share both our strengths and flaws.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+  ],
+  Self_Serving_Bias: [
+    {q: 'I consider my abilities to be above average.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I am usually right in my opinions or decisions.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'If something I do succeeds, it\'s because of my skill.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'If I fail at something, it is usually due to circumstances beyond my control.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I feel that others often don\'t appreciate how good I really am at things.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'Criticism from others usually doesn\'t change my high opinion of myself.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'When I make mistakes, they usually come from good intentions.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I tend to remember my successes more clearly than my failures.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+  ],
+  Self_Insight: [
+    {q: 'I have a clear understanding of my strengths and weaknesses.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I\'m very aware of why I do the things I do.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I regularly reflect on my actions to learn about myself.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I can accurately describe my personality traits.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I\'m aware of my emotions as they arise.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+    {q: 'I can admit when I\'m wrong or when I need to improve.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I can recognize patterns in how I respond to challenges or stress.', labels: ['Completely Untrue of Me','Mostly Untrue of Me','Somewhat Untrue of Me','Neutral','Somewhat True of Me','Mostly True of Me','Completely True of Me']},
+    {q: 'I often notice how my emotions influence the way I treat others.', labels: ['Never','Rarely','Occasionally','Sometimes','Often','Usually','Always']},
+  ],
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+
+// Build flat question list
+let FLAT_QUESTIONS = [];
+SECTIONS.forEach((sec) => {
+  const qs = RAW_QUESTIONS[sec.dim] || [];
+  qs.forEach((q, qi) => {
+    FLAT_QUESTIONS.push({ dim: sec.dim, qIdx: qi, ...q });
+  });
+});
+
+// Fisher-Yates shuffle
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const QUESTIONS_PER_PAGE = 10;
+
+let state = {
+  name: '',
+  answers: {},        // { 'dim__qIdx': value 1-7 }
+  shuffled: [],       // shuffled FLAT_QUESTIONS
+  currentPage: 0,
+  totalPages: 0,
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════════════
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() {
+  state.name = document.getElementById('input-name').value.trim() || 'You';
+  state.answers = {};
+  state.shuffled = shuffle(FLAT_QUESTIONS);
+  state.currentPage = 0;
+  state.totalPages = Math.ceil(state.shuffled.length / QUESTIONS_PER_PAGE);
+  showScreen('quiz');
+  renderPage(0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  QUIZ RENDERING
+// ═══════════════════════════════════════════════════════════════
+
+function getKey(dim, qi) { return `${dim}__${qi}`; }
+
+function getPageQuestions(pageIdx) {
+  const start = pageIdx * QUESTIONS_PER_PAGE;
+  return state.shuffled.slice(start, start + QUESTIONS_PER_PAGE);
+}
+
+function renderPage(pageIdx) {
+  const pageQs = getPageQuestions(pageIdx);
+  const body = document.getElementById('quiz-body');
+  const globalStart = pageIdx * QUESTIONS_PER_PAGE;
+
+  // Update header section label
+  document.getElementById('section-label').textContent =
+    `Page ${pageIdx + 1} of ${state.totalPages}`;
+
+  // Progress
+  let answered = Object.keys(state.answers).length;
+  updateProgress(answered);
+
+  body.innerHTML = '';
+
+  pageQs.forEach((item, localIdx) => {
+    const globalIdx = globalStart + localIdx;
+    const key = getKey(item.dim, item.qIdx);
+
+    const block = document.createElement('div');
+    block.className = 'question-block visible';
+    block.id = `qblock_${globalIdx}`;
+
+    const opts = item.labels.map((lbl, li) => {
+      const val = li + 1;
+      const checked = state.answers[key] === val ? 'checked' : '';
+      const rid = `r_${globalIdx}_${li}`;
+      return `
+        <div class="likert-opt">
+          <input type="radio" name="${key}" id="${rid}" value="${val}" ${checked}>
+          <label for="${rid}">${lbl}</label>
+        </div>`;
+    }).join('');
+
+    block.innerHTML = `
+      <div class="question-num">Q${globalIdx + 1}</div>
+      <div class="question-text">${item.q}</div>
+      <div class="likert-row">${opts}</div>
+    `;
+    body.appendChild(block);
+
+    block.querySelectorAll('input[type=radio]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        state.answers[key] = parseInt(radio.value);
+        updateProgress(Object.keys(state.answers).length);
+        // remove red highlight if present
+        block.style.borderLeft = '';
+      });
+    });
+  });
+
+  // Warning + nav
+  const warning = document.createElement('div');
+  warning.className = 'unanswered-warning';
+  warning.id = 'unanswered-warn';
+  warning.textContent = 'Please answer all questions on this page before continuing.';
+
+  const isLast = pageIdx === state.totalPages - 1;
+  const nav = document.createElement('div');
+  nav.className = 'quiz-nav';
+  nav.innerHTML = `
+    ${pageIdx > 0 ? '<button class="btn-ghost" onclick="prevPage()">← Back</button>' : ''}
+    <div style="flex:1"></div>
+    <button class="btn-next" onclick="${isLast ? 'submitQuiz' : 'nextPage'}()">
+      <span>${isLast ? 'See My Results →' : 'Next →'}</span>
+    </button>
+  `;
+
+  body.appendChild(warning);
+  body.appendChild(nav);
+}
+
+function updateProgress(answered) {
+  const total = FLAT_QUESTIONS.length;
+  const pct = Math.round((answered / total) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${answered} / ${total}`;
+}
+
+function getUnansweredOnPage(pageIdx) {
+  return getPageQuestions(pageIdx).filter(item =>
+    state.answers[getKey(item.dim, item.qIdx)] === undefined
+  );
+}
+
+function nextPage() {
+  const unanswered = getUnansweredOnPage(state.currentPage);
+  if (unanswered.length > 0) {
+    document.getElementById('unanswered-warn').style.display = 'block';
+    // highlight first unanswered
+    const globalStart = state.currentPage * QUESTIONS_PER_PAGE;
+    const firstIdx = getPageQuestions(state.currentPage).findIndex(item =>
+      state.answers[getKey(item.dim, item.qIdx)] === undefined
+    );
+    const el = document.getElementById(`qblock_${globalStart + firstIdx}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  state.currentPage++;
+  renderPage(state.currentPage);
+  window.scrollTo(0, 0);
+}
+
+function prevPage() {
+  state.currentPage--;
+  renderPage(state.currentPage);
+  window.scrollTo(0, 0);
+}
+
+function submitQuiz() {
+  const unanswered = getUnansweredOnPage(state.currentPage);
+  if (unanswered.length > 0) {
+    document.getElementById('unanswered-warn').style.display = 'block';
+    return;
+  }
+  showScreen('loading');
+  setTimeout(computeAndShowResults, 1800);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SCORING ENGINE
+// ═══════════════════════════════════════════════════════════════
+
+function computeDimMeans() {
+  const means = {};
+  SECTIONS.forEach(sec => {
+    const qs = RAW_QUESTIONS[sec.dim] || [];
+    let sum = 0, count = 0;
+    qs.forEach((_, qi) => {
+      const val = state.answers[getKey(sec.dim, qi)];
+      if (val !== undefined) { sum += val; count++; }
+    });
+    means[sec.dim] = count > 0 ? sum / count : 4.0;
+  });
+  return means;
+}
+
+function euclideanDist(personVec, centroidVec, dims) {
+  let sumSq = 0;
+  dims.forEach(d => {
+    const diff = (personVec[d] || 4) - (centroidVec[d] || 4);
+    sumSq += diff * diff;
+  });
+  return Math.sqrt(sumSq);
+}
+
+function distToSimilarity(distances) {
+  // Convert distances to probabilities via softmax of (-dist)
+  const entries = Object.entries(distances);
+  const negDists = entries.map(([k, d]) => [k, -d]);
+  const maxVal = Math.max(...negDists.map(([, v]) => v));
+  const exps = negDists.map(([k, v]) => [k, Math.exp(v - maxVal)]);
+  const total = exps.reduce((s, [, v]) => s + v, 0);
+  const probs = {};
+  exps.forEach(([k, v]) => probs[k] = v / total);
+  return probs;
+}
+
+function computeConfidence(siMean, ssbMean) {
+  // Confidence = SI normalized - SSB penalty
+  const siNorm = (siMean - 1) / 6; // 0-1
+  const ssbNorm = (ssbMean - 1) / 6;
+  const C = Math.max(0, Math.min(1, siNorm - 0.4 * ssbNorm));
+  let level = 'Low';
+  if (C >= 0.7) level = 'High';
+  else if (C >= 0.4) level = 'Moderate';
+  return { C, level };
+}
+
+function computeAndShowResults() {
+  const means = computeDimMeans();
+
+  // Distance to each archetype centroid (motivation dims only)
+  const distances = {};
+  Object.entries(CENTROIDS).forEach(([name, centroid]) => {
+    distances[name] = euclideanDist(means, centroid, MOTIVATIONS);
+  });
+
+  // Sort by distance (ascending = best match)
+  const sorted = Object.entries(distances).sort((a, b) => a[1] - b[1]);
+  const top3 = sorted.slice(0, 3);
+
+  // Probabilities
+  const probs = distToSimilarity(distances);
+
+  // Confidence
+  const siMean = means['Self_Insight'] || 4;
+  const ssbMean = means['Self_Serving_Bias'] || 4;
+  const { C, level: C_level } = computeConfidence(siMean, ssbMean);
+
+  renderResults({ means, distances, sorted, top3, probs, siMean, ssbMean, C, C_level });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  RESULTS RENDERING
+// ═══════════════════════════════════════════════════════════════
+
+function renderResults({ means, sorted, top3, probs, siMean, ssbMean, C, C_level }) {
+  const [p1name] = top3[0];
+  const [p2name] = top3[1];
+  const [p3name] = top3[2];
+  const info1 = ARCHETYPE_INFO[p1name] || {};
+
+  // Hero
+  document.getElementById('res-symbol').textContent = info1.symbol || '◈';
+  document.getElementById('res-name').textContent = info1.short || p1name;
+  document.getElementById('res-latin').textContent = info1.latin || '';
+  document.getElementById('res-motivation').textContent = info1.motivation || '';
+
+  // Top3 grid
+  const grid = document.getElementById('top3-grid');
+  grid.innerHTML = '';
+  top3.forEach(([name, dist], i) => {
+    const inf = ARCHETYPE_INFO[name] || {};
+    const prob = probs[name] || 0;
+    const card = document.createElement('div');
+    card.className = 'top3-card' + (i === 0 ? ' primary' : '');
+    card.style.animationDelay = `${i * 0.15}s`;
+    card.innerHTML = `
+      <div class="top3-rank">${['Primary','Secondary','Tertiary'][i]}</div>
+      <div style="font-size:1.5rem; margin-bottom:0.3rem;">${inf.symbol || '◈'}</div>
+      <div class="top3-name">${inf.short || name}</div>
+      <div class="top3-sub">${inf.latin || ''}</div>
+      <div class="top3-score">${(prob * 100).toFixed(1)}% match</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Description
+  document.getElementById('res-description').innerHTML = (info1.description || '').replace(/\n\n/g, '<br><br>');
+  document.getElementById('res-aka').textContent = info1.aka ? 'Also known as: ' + info1.aka : '';
+
+  // Motivation bars
+  const barsEl = document.getElementById('mot-bars');
+  barsEl.innerHTML = '';
+  // Sort by score descending
+  const motSorted = MOTIVATIONS.map(d => ({ dim: d, val: means[d] || 4 }))
+    .sort((a, b) => b.val - a.val);
+  motSorted.forEach((item, i) => {
+    const pct = ((item.val - 1) / 6) * 100;
+    const row = document.createElement('div');
+    row.className = 'mot-bar-row';
+    row.innerHTML = `
+      <div class="mot-bar-label">${DIM_LABELS[item.dim] || item.dim}</div>
+      <div class="mot-bar-track"><div class="mot-bar-fill" style="width:0%" data-pct="${pct.toFixed(1)}"></div></div>
+      <div class="mot-bar-val">${item.val.toFixed(2)}</div>
+    `;
+    barsEl.appendChild(row);
+  });
+
+  // Animate bars after a tick
+  setTimeout(() => {
+    barsEl.querySelectorAll('.mot-bar-fill').forEach(el => {
+      el.style.width = el.dataset.pct + '%';
+    });
+  }, 100);
+
+  // Confidence
+  document.getElementById('res-confidence').textContent = C.toFixed(2);
+  document.getElementById('res-confidence-level').textContent = C_level + ' confidence';
+  document.getElementById('res-si').textContent = siMean.toFixed(2);
+  document.getElementById('res-ssb').textContent = ssbMean.toFixed(2);
+
+  // Blend text
+  const info2 = ARCHETYPE_INFO[top3[1][0]] || {};
+  const info3 = ARCHETYPE_INFO[top3[2][0]] || {};
+  const p1pct = Math.round(probs[top3[0][0]] * 100);
+  const p2pct = Math.round(probs[top3[1][0]] * 100);
+  const p3pct = Math.round(probs[top3[2][0]] * 100);
+
+  document.getElementById('res-blend').innerHTML =
+    `Your motivational signature blends the energy of <strong>${info1.short || top3[0][0]}</strong> (${p1pct}%) with threads of
+    <strong>${info2.short || top3[1][0]}</strong> (${p2pct}%) and
+    <strong>${info3.short || top3[2][0]}</strong> (${p3pct}%). Most people carry a dominant archetype with secondary influences that shape how the primary pattern expresses itself.`;
+
+  showScreen('results');
+}
+
+function restart() {
+  state = { name: '', answers: {}, shuffled: [], currentPage: 0, totalPages: 0 };
+  showScreen('cover');
+}
+</script>
+</body>
+</html>
